@@ -7,16 +7,23 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import cn.m15.app.wifiworm.R;
+import cn.m15.app.wifiworm.presenter.ShowPsdPresenter;
+import cn.m15.app.wifiworm.ui.view.IWifiPsdView;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements IWifiPsdView {
 
     private TextView mShowWifiPassword;
+
+    private ShowPsdPresenter showPsdPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initView();
+        showPsdPresenter = new ShowPsdPresenter(this);
+        showPsdPresenter.showPassword();
     }
 
     @Override
@@ -46,5 +53,11 @@ public class MainActivity extends Activity {
      * */
     private void initView(){
         mShowWifiPassword = (TextView) this.findViewById(R.id.activity_main_wifi_password);
+    }
+
+
+    @Override
+    public void showPassword(String psd) {
+        mShowWifiPassword.setText(psd);
     }
 }
