@@ -1,14 +1,17 @@
 package cn.m15.app.wifiworm.activity;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import cn.m15.app.wifiworm.R;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
+
+    private TextView mShowWifiPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,5 +39,12 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 初始化视图
+     * */
+    private void initView(){
+        mShowWifiPassword = (TextView) this.findViewById(R.id.activity_main_wifi_password);
     }
 }
