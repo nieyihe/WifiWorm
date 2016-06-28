@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">WifiWorm</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="wifi_code">当前WIFI密码：</string>
+    <string name="action_settings">Settings</string>
+</resources>

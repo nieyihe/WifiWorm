@@ -1,0 +1,24 @@
+apply plugin: 'checkstyle'
+
+task checkstyle(type: Checkstyle) {
+    // 可以指定checkstyle.xml的存放路径，默认是"app/config/checkstyle/checkstyle.xml"
+    configFile = rootProject.file('app/checkstyle.xml')
+
+    source 'src/main/java' // androidTest目录暂时不做检查
+    include '**/*.java'
+    exclude '**/gen/**'
+    exclude '**/R.java'
+    exclude '**/BuildConfig.java'
+
+    def configProps = ['proj.module.dir': projectDir.absolutePath]
+    configProperties configProps
+
+    // empty classpath
+    classpath = files()
+}
+
+dependencies {
+    checkstyle 'com.puppycrawl.tools:checkstyle:6.6'
+}
+
+preBuild.dependsOn('checkstyle')

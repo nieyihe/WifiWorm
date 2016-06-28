@@ -1,0 +1,484 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+    "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+    "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+<module name="Checker">
+
+    <property name="charset" value="UTF-8"/>
+
+    <!-- 验证级别 -->
+    <property name="severity" value="error"/>
+
+    <!-- 忽略检查 -->
+    <module name="SuppressionFilter">
+        <property name="file" value="app/code_suppressions.xml"/>
+    </module>
+
+    <!-- 检查单行 -->
+    <module name="RegexpSingleline">
+        <property name="format" value="\S+\s+$"/>
+        <!-- 最多允许每一行在结尾出现多少个空白符 -->
+        <!--<property name="minimum" value="0"/>-->
+        <!--<property name="maximum" value="2"/>-->
+    </module>
+
+    <!-- 程序中不允许出现System.out或System.err方式的输出，包括注释内的 -->
+    <module name="RegexpMultiline">
+        <property name="format" value="System\.(out)|(err)\.print(ln)?\("/>
+    </module>
+
+    <!-- 文件是否可以包含'\t' -->
+    <module name="FileTabCharacter">
+        <property name="eachLine" value="true"/>
+    </module>
+
+    <!--<module name="JavadocPackage"/>-->
+
+    <!-- 文件最大行数 -->
+    <!--<module name="LineLength">-->
+    <!--<property name="max" value="100"/>-->
+    <!--<property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>-->
+    <!--</module>-->
+
+    <module name="TreeWalker">
+
+        <!-- 检查命名规范 START -->
+        <!-- 除常量外，所以变量命名均应该使用驼峰命名法 -->
+        <!-- 抽象类名称开头字母必须大写 -->
+        <module name="AbstractClassName">
+            <property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
+            <property name="ignoreModifier" value="true"/>
+        </module>
+        <!-- 类泛型必须是A-Z的大写字母 -->
+        <module name="ClassTypeParameterName">
+            <property name="format" value="^[A-Z]$"/>
+        </module>
+        <!-- 常量必须大写,每个单词之间可以以下划线链接 -->
+        <module name="ConstantName" >
+            <property name="format" value="^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$"/>
+        </module>
+        <!-- 局部final变量必须以小写字母开头,由小写字母和数字组成 -->
+        <module name="LocalFinalVariableName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+        </module>
+        <!-- 局部变量必须以小写字母开头,由小写字母和数字组成 -->
+        <module name="LocalVariableName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+        </module>
+        <!-- 成员变量必须以m开头 -->
+        <module name="MemberName">
+            <property name="format" value="^m[A-Z][a-zA-Z0-9]*$"/>
+        </module>
+        <!-- 方法名称必须以小写字母开头,由小写字母和数字组成 -->
+        <module name="MethodName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+            <!-- 不允许出现方法名与类名相同的情况 -->
+            <property name="allowClassName" value="false"/>
+        </module>
+        <!-- 方法泛型必须是A-Z的大写字母 -->
+        <module name="MethodTypeParameterName">
+            <property name="format" value="^[A-Z]$"/>
+        </module>
+        <!--<module name="InterfaceTypeParameterName"/>-->
+        <!-- 包名必须以小写字母开头,,由小写字母、数字和点号组成 -->
+        <module name="PackageName">
+            <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
+        </module>
+        <!-- 参数名称必须以小写字母开头,由小写字母和数字组成 -->
+        <module name="ParameterName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+        </module>
+        <!-- 静态变量必须以s开头 -->
+        <module name="StaticVariableName">
+            <property name="format" value="^s[A-Z][a-zA-Z0-9]*$"/>
+        </module>
+        <!-- 类名、接口名、枚举名、注解名开头字母必须大写 -->
+        <module name="TypeName">
+            <property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
+        </module>
+        <!-- 检查连续大写字母的长度，强制使用驼峰命名法 -->
+        <module name="AbbreviationAsWordInName">
+            <property name="ignoreFinal" value="false"/>
+            <property name="allowedAbbreviationLength" value="1"/>
+        </module>
+        <!-- 检查命名规范 END -->
+
+        <!-- 检查空白 START -->
+        <!--
+            检查"<"和">"的左右空白符
+            public void <K, V extends Number> boolean foo(K, V) {} // Generic methods definitions
+            class name<T1, T2, ..., Tn> {}                         // Generic type definition
+            OrderedPair<String, Box<Integer>> p;                   // Generic type reference
+            boolean same = Util.<Integer, String>compare(p1, p2);  // Generic preceded method name
+            Pair<Integer, String> p1 = new Pair<>(1, "apple");     // Diamond operator
+            List<T> list = ImmutableList.Builder<T>::new;          // Method reference
+            sort(list, Comparable::<String>compareTo);             // Method reference
+        -->
+        <module name="GenericWhitespace">
+            <message key="ws.followed"
+                value="GenericWhitespace ''{0}'' is followed by whitespace."/>
+            <message key="ws.preceded"
+                value="GenericWhitespace ''{0}'' is preceded with whitespace."/>
+            <message key="ws.illegalFollow"
+                value="GenericWhitespace ''{0}'' should followed by whitespace."/>
+            <message key="ws.notPreceded"
+                value="GenericWhitespace ''{0}'' is not preceded with whitespace."/>
+        </module>
+
+        <!-- 一个空的初始化前面是否要有空白，例如：
+            for ({*}; i < j; i++)
+        -->
+        <module name="EmptyForInitializerPad">
+            <property name="option" value="nospace"/>
+        </module>
+
+        <!-- 迭代时出现空的条件时需不需要加空白，例如：
+            for (Iterator foo = very.long.line.iterator(); foo.hasNext();{*})
+        -->
+        <module name="EmptyForIteratorPad">
+            <property name="option" value="nospace"/>
+        </module>
+
+        <!-- 方法定义、构造函数定义、方法调用、构造函数调用和参数列表的左括号之间是否有空格 -->
+        <module name="MethodParamPad"/>
+
+        <!--
+            一个Token的后面不应该有空格，但允许换行。
+            Token指：".", "~", "++", "- -", "!", "-", "+", 类型转换：(String)obj的"(", 数组声明的"["
+            例如：this.test(), "."后面就不应该有空格; int[] y; "int"和"["之间不应该有空格
+        -->
+        <module name="NoWhitespaceAfter">
+            <property name="tokens" value="BNOT, DEC, DOT, INC, LNOT, UNARY_MINUS, UNARY_PLUS, ARRAY_DECLARATOR"/>
+        </module>
+
+        <!--
+            一个Token的前面不应该有空格，不允许换行。
+            Token指：".", ";", "++", "- -"
+        -->
+        <module name="NoWhitespaceBefore"/>
+
+        <!--
+            定义以下操作符的换行：
+                &,|,>>>,^,:,/==,>=,>,&&,<=,instanceof,||,<,-,%,!=,+,?,<<,>>,*.
+            NL: someVariable = aBigVariableNameToMakeThings + "this may work"
+                   + lookVeryInteresting; "+"必须在一个新行上
+        -->
+        <module name="OperatorWrap">
+            <property name="option" value="NL"/>
+            <property name="tokens" value="BAND, BOR, BSR, BXOR, DIV, EQUAL, GE, GT, LAND, LE, LITERAL_INSTANCEOF, LOR, LT, MINUS, MOD, NOT_EQUAL, PLUS, QUESTION, SL, SR, STAR"/>
+        </module>
+
+        <!--
+            定义圆括号的空白
+                1.构造函数的调用，如： this(1);
+                2.左括号
+                3.方法调用
+                4.右括号
+                5.父类构造函数的调用
+        -->
+        <module name="ParenPad">
+            <property name="tokens" value="CTOR_CALL, LPAREN, METHOD_CALL, RPAREN, SUPER_CTOR_CALL"/>
+            <property name="option" value="nospace"/>
+        </module>
+
+        <!--
+            定义类型转换时括号的空白
+        -->
+        <module name="TypecastParenPad">
+            <property name="tokens" value="TYPECAST, RPAREN"/>
+            <property name="option" value="nospace"/>
+        </module>
+
+        <!-- ","、";"，但不能明确空格个数，推荐一个 -->
+        <module name="WhitespaceAfter">
+            <property name="tokens" value="COMMA, SEMI"/>
+        </module>
+
+        <!-- 定义Token周围是否有空格 -->
+        <module name="WhitespaceAround">
+            <property name="allowEmptyConstructors" value="true"/>
+            <property name="allowEmptyMethods" value="true"/>
+            <property name="allowEmptyTypes" value="true"/>
+            <property name="allowEmptyLoops" value="true"/>
+            <message key="ws.notFollowed"
+                value="WhitespaceAround: ''{0}'' is not followed by whitespace. Empty blocks may only be represented as '{}' when not part of a multi-block statement (4.1.3)"/>
+            <message key="ws.notPreceded"
+                value="WhitespaceAround: ''{0}'' is not preceded with whitespace."/>
+        </module>
+
+        <!-- package声明和import声明不应该换行 -->
+        <module name="NoLineWrap"/>
+
+        <!-- 检查在文件头部、package声明、所有import声明、域、构造函数、方法、嵌套类之后是否有空行 -->
+        <module name="EmptyLineSeparator">
+            <property name="allowNoEmptyLineBetweenFields" value="true"/>
+        </module>
+
+        <!-- 定义"."号允许换行，但";"不允许换行 -->
+        <module name="SeparatorWrap">
+            <property name="tokens" value="DOT"/>
+            <property name="option" value="nl"/>
+        </module>
+        <module name="SeparatorWrap">
+            <property name="tokens" value="COMMA"/>
+            <property name="option" value="EOL"/>
+        </module>
+        <!-- 检查空白 END -->
+
+        <!-- 检查代码块 START -->
+        <!-- 检查代码块,"{"和"}"之间的区域即为代码块 -->
+        <module name="EmptyBlock">
+            <!-- stmt:必须有代码, text:必须有文字 -->
+            <property name="option" value="text"/>
+            <property name="tokens" value="LITERAL_TRY, LITERAL_FINALLY, LITERAL_IF, LITERAL_ELSE, LITERAL_SWITCH"/>
+        </module>
+        <!-- 检查catch块, 不能是空的，必须有注释或代码 -->
+        <module name="EmptyCatchBlock">
+            <property name="exceptionVariableName" value="expected"/>
+        </module>
+        <!-- 检查"{"的位置, 必须总是在一行的末尾 -->
+        <module name="LeftCurly">
+            <!-- 一行的最大字符数量??? -->
+            <property name="maxLineLength" value="100"/>
+        </module>
+        <!-- 检查代码块周围的大括号 -->
+        <module name="NeedBraces">
+            <!-- 不允许单行的语句
+                 例如：if (obj.isValid()) return true;
+            -->
+            <property name="allowSingleLineStatement" value="true"/>
+        </module>
+        <!-- 检查"}"的位置, 与接下来的声明在同一行上，例如
+             try {
+                ...
+             } finally {
+         -->
+        <module name="RightCurly"/>
+        <!-- 允许某些情况的"}"是在末尾 -->
+        <module name="RightCurly">
+            <property name="option" value="alone"/>
+            <property name="tokens" value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, LITERAL_DO, STATIC_INIT, INSTANCE_INIT"/>
+        </module>
+        <!-- 避免嵌套的代码块 -->
+        <module name="AvoidNestedBlocks">
+            <!-- 允许在switch-case中出现代码块 -->
+            <property name="allowInSwitchCase" value="true"/>
+        </module>
+        <!-- 检查代码块 END -->
+
+        <!-- 检查类的设计 START -->
+        <!-- 检查类成员的可见性 -->
+        <!--<module name="VisibilityModifier" />-->
+        <!-- 检查final类是否只有私有构造函数 -->
+        <!--<module name="FinalClass"/>-->
+        <!-- 接口中必须有方法存在 -->
+        <!--<module name="InterfaceIsType">-->
+        <!-- 允许标记接口，例如：Serializable -->
+        <!--<property name="allowMarkerInterfaces" value="true"/>-->
+        <!--</module>-->
+        <!--<module name="HideUtilityClassConstructor" />-->
+        <!--<module name="DesignForExtension"/>-->
+        <!--<module name="MutableException"/>-->
+        <!--<module name="ThrowsCount"/>-->
+        <!-- 检查是否内部类或接口声明在类的底部，在所有方法和成员变量之后 -->
+        <!--<module name="InnerTypeLast"/>-->
+        <!-- 检查第一个类是public的，并且类名与文件名相同 -->
+        <module name="OneTopLevelClass"/>
+        <!-- 检查类的设计 END -->
+
+        <!-- 检查编码 START -->
+        <!-- 检查数组最后一个元素尾部的逗号 -->
+        <!--<module name="ArrayTrailingComma"/>-->
+        <!--<module name="AvoidInlineConditionals"/>-->
+        <!--<module name="CovariantEquals"/>-->
+        <!-- 检查空声明，即只有一个";" -->
+        <module name="EmptyStatement"/>
+        <!-- 检查equals和equalsIgnoreCases是否使用正确，例如：
+             "My_Sweet_String".equals(nullString); // RIGHT
+             nullString.equals("My_Sweet_String"); // WRONG
+        -->
+        <module name="EqualsAvoidNull"/>
+        <!--<module name="EqualsHashCode"/>-->
+        <!--<module name="FinalLocalVariable"/>-->
+        <!--<module name="HiddenField"/>-->
+        <!-- 检查非法实例化, 禁止直接创建某些类的实例 -->
+        <module name="IllegalInstantiation">
+            <property name="classes" value="android.app.Activity, android.content.Context"/>
+        </module>
+        <!--<module name="IllegalToken"/>-->
+        <!-- 检查非法的String、char的字面量，不允许八进制或Unicode转义字符 -->
+        <module name="IllegalTokenText">
+            <property name="tokens" value="STRING_LITERAL, CHAR_LITERAL"/>
+            <property name="format" value="\\u00(08|09|0(a|A)|0(c|C)|0(d|D)|22|27|5(C|c))|\\(0(10|11|12|14|15|42|47)|134)"/>
+            <property name="message" value="Avoid using corresponding octal or Unicode escape."/>
+        </module>
+        <!--<module name="InnerAssignment"/>-->
+        <!--<module name="MagicNumber"/>-->
+        <!-- 检查switch是否有default -->
+        <module name="MissingSwitchDefault"/>
+        <!--<module name="ModifiedControlVariable"/>-->
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+        <module name="StringLiteralEquality"/>
+        <!--<module name="NestedForDepth"/>-->
+        <!--<module name="NestedIfDepth"/>-->
+        <!--<module name="NestedTryDepth"/>-->
+        <!--<module name="NoClone"/>-->
+        <!--<module name="NoFinalizer"/>-->
+        <!--<module name="SuperClone"/>-->
+        <!--<module name="SuperFinalize"/>-->
+        <!--<module name="IllegalCatch"/>-->
+        <!--<module name="IllegalThrows"/>-->
+        <!--<module name="PackageDeclaration"/>-->
+        <!--<module name="ReturnCount"/>-->
+        <!--<module name="IllegalType"/>-->
+        <!-- 检查接口或类的内部各部分的声明顺序。
+            1.静态变量，public，protected，package，private
+            2.实例变量，public，protected，package，private
+            3.构造函数
+            4.方法
+        -->
+        <!--<module name="DeclarationOrder"/>-->
+        <!--<module name="ParameterAssignment"/>-->
+        <!--<module name="ExplicitInitialization"/>-->
+        <!-- 检查default是否是在所有case之后 -->
+        <module name="DefaultComesLast"/>
+        <!--<module name="MissingCtor"/>-->
+        <!--<module name="FallThrough"/>-->
+        <!--<module name="MultipleStringLiterals"/>-->
+        <!-- 不允许多个变量在同一行进行声明 -->
+        <module name="MultipleVariableDeclarations"/>
+        <!--<module name="RequireThis"/>-->
+        <!--<module name="UnnecessaryParentheses"/>-->
+        <!-- 一个语句一行 -->
+        <module name="OneStatementPerLine"/>
+        <!-- 检查变量声明和使用的距离，不能距离太远，会忽略final的变量
+             推荐看：http://checkstyle.sourceforge.net/config_coding.html#VariableDeclarationUsageDistance
+         -->
+        <module name="VariableDeclarationUsageDistance"/>
+        <!-- 检查重载方法是否放在一起 -->
+        <!--<module name="OverloadMethodsDeclarationOrder"/>-->
+        <!-- 检查编码 END -->
+
+        <!-- 检查文件头 START -->
+        <!--<module name="Header"/>-->
+        <!--<module name="RegexpHeader"/>-->
+        <!-- 检查文件头 END -->
+
+        <!-- 检查import START -->
+        <!-- 避免声明import语句时使用"*" -->
+        <module name="AvoidStarImport">
+            <!-- 不允许使用导入静态成员 -->
+            <property name="allowStaticMemberImports" value="false"/>
+            <!--<property name="excludes" value="java.io,java.net,java.lang.Math"/>-->
+        </module>
+        <!-- 避免静态导入 -->
+        <module name="AvoidStaticImport"/>
+        <!--<module name="IllegalImport"/>-->
+        <!-- 检查多余的导入 -->
+        <module name="RedundantImport"/>
+        <!-- 检查不使用的导入 -->
+        <module name="UnusedImports"/>
+        <!--<module name="ImportOrder"/>-->
+        <!--<module name="CustomImportOrder"/>-->
+        <!-- 检查import END -->
+
+        <!-- Java Doc START -->
+        <!--<module name="JavadocType"-->
+        <!--<module name="JavadocMethod"/>-->
+        <!--<module name="JavadocVariable"/>-->
+        <!--<module name="JavadocStyle"/>-->
+        <!--<module name="WriteTag"/>-->
+        <!--<module name="NonEmptyAtclauseDescription"/>-->
+        <!--<module name="JavadocTagContinuationIndentation"/>-->
+        <!--<module name="SummaryJavadoc"/>-->
+        <!--<module name="AtclauseOrder"/>-->
+        <!--<module name="JavadocParagraph"/>-->
+        <!--<module name="SingleLineJavadoc"/>-->
+        <!-- Java Doc END -->
+
+        <!-- 其他 START -->
+        <!-- 使用大写L定义long型常数 -->
+        <module name="UpperEll"/>
+        <!-- 检查数组定义的样式，即int[] arr;而不是int arr[] -->
+        <module name="ArrayTypeStyle"/>
+        <!--<module name="FinalParameters"/>-->
+        <!--<module name="DescendantToken"/>-->
+        <!-- 检查代码缩进 -->
+        <module name="Indentation">
+            <!-- how many spaces to use for new indentation level -->
+            <property name="basicOffset" value="4"/>
+            <!-- how far braces should be indented when on the next line -->
+            <property name="braceAdjustment" value="0"/>
+            <!-- how much to indent a case label -->
+            <property name="caseIndent" value="4"/>
+            <!-- how far a throws clause should be indented when on next line -->
+            <property name="throwsIndent" value="4"/>
+            <!-- how much to indent an array initialisation when on next line -->
+            <property name="arrayInitIndent" value="4"/>
+            <!-- how far continuation line should be indented when line-wrapping is present -->
+            <property name="lineWrappingIndentation" value="4"/>
+        </module>
+        <!--<module name="TrailingComment"/>-->
+        <!--<module name="Regexp"/>-->
+        <!-- 检查类名与文件名是否匹配 -->
+        <module name="OuterTypeFilename"/>
+        <!--<module name="UniqueProperties"/>-->
+        <!-- 避免使用转义的Unicode字符 -->
+        <module name="AvoidEscapedUnicodeCharacters">
+            <property name="allowEscapesForControlCharacters" value="true"/>
+            <property name="allowByTailComment" value="true"/>
+            <property name="allowNonPrintableEscapes" value="true"/>
+        </module>
+        <!-- 其他 END -->
+
+        <!-- 检查修饰符 START -->
+        <!-- 检查修饰符出现的顺序
+             1.public
+             2.protected
+             3.private
+             4.abstract
+             5.static
+             6.final
+             7.transient
+             8.volatile
+             9.synchronized
+             10.native
+             11.strictfp
+         -->
+        <!--<module name="ModifierOrder"/>-->
+        <!-- 检查多余的修饰符
+             1.使用abstract描述interface是多余的
+             2.接口内的变量自动是public static final的
+             3.注解类是接口的一种形式，所以同2
+             4.final类是不能被继承的，所以使用final描述final类中的方法是多余的
+             5.内部interface声明成static是多余的
+        -->
+        <!--<module name="RedundantModifier"/>-->
+        <!-- 检查修饰符 END -->
+
+        <!-- 检查size START -->
+        <!--<module name="ExecutableStatementCount"/>-->
+        <!--<module name="MethodLength"/>-->
+        <!--<module name="AnonInnerLength"/>-->
+        <!--<module name="ParameterNumber"/>-->
+        <!--<module name="OuterTypeNumber"/>-->
+        <!--<module name="MethodCount"/>-->
+        <!-- 检查size END -->
+
+        <!-- 检查metrics Start -->
+        <!-- 检查一个布尔表达式中"&&", "||", "&", "|" , "^"的数量，太多会导致可读性、可维护性、可调式性降低  -->
+        <module name="BooleanExpressionComplexity">
+            <property name="max" value="3"/>
+        </module>
+        <!--<module name="ClassDataAbstractionCoupling"/>-->
+        <!--<module name="ClassFanOutComplexity"/>-->
+        <!--<module name="CyclomaticComplexity"/>-->
+        <!--<module name="NPathComplexity"/>-->
+        <!--<module name="NPathComplexity"/>-->
+        <!--<module name="JavaNCSS"/>-->
+        <!-- 检查metrics END -->
+
+    </module>
+
+</module>
